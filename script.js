@@ -831,7 +831,7 @@ addEventListener("mousemove", (event) => {
 });
 const animate = () => {
   animateit = requestAnimationFrame(animate);
-  c.fillStyle = "rgba(0,0,0,0.9)";
+  c.fillStyle = "rgba(0,0,0,0.45)";
   c.fillRect(0, 0, canvas.width, canvas.height);
   if (boolForSpawn) spawnArray[0].update();
   if (boolForSpawnLife) spawnArrayLife[0].update();
