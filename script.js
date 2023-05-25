@@ -9,8 +9,6 @@ const resume = document.querySelector(".resume");
 const bgMusic = new Audio("bgMusic.mp3");
 const shootSound = new Audio("shoot.mp3");
 
-bgMusic.play();
-bgMusic.volume = 0.5;
 let villainDropBool = false;
 bgMusic.addEventListener(
   "ended",
@@ -32,7 +30,30 @@ addEventListener("resize", () => {
   canvas.height = window.innerHeight;
   centreX = canvas.width / 2;
   centreY = canvas.height / 2;
-  init();
+  if (highScore < score) {
+    highScore = score;
+    localStorage.setItem("high_score", highScore);
+  }
+  cancelAnimationFrame(animateit);
+  villainBool = false;
+  soundBool = false;
+  bgMusic.pause();
+
+  setTimeout(() => {
+    villainDropBool = false;
+    villainDropBool1 = false;
+    villainsArray = [];
+    init();
+    VillainSpawn();
+    animateit = requestAnimationFrame(animate);
+
+    looseBool = false;
+    looseBoolPlayer = false;
+    villainBool = true;
+    soundBool = true;
+    bgMusic.play();
+    bgMusic.volume = 0.5;
+  }, 2000);
 });
 
 function distance(x, y, otherx, othery) {
@@ -303,7 +324,7 @@ function Text(x, y) {
 
   this.draw = function () {
     c.fillStyle = "white";
-    c.font = "bold 30pt roboto";
+    c.font = "bold 20pt roboto";
 
     c.fillText(`Score: ${score}`, x, y);
   };
@@ -318,7 +339,7 @@ function TextForHighscore(x, y) {
 
   this.draw = function () {
     c.fillStyle = "white";
-    c.font = "bold 30pt roboto";
+    c.font = "bold 20pt roboto";
 
     c.fillText(`HighScore: ${highScore}`, x, y);
   };
@@ -568,7 +589,7 @@ const init = () => {
   score = 0;
   lifeCountVillain = 60;
   lifeCountVillain1 = 60;
-
+  villains = [];
   lifeCount = 400;
   lifeCountPlayer = 70;
   lifeShowerBoolForVillain = true;
@@ -601,7 +622,12 @@ const init = () => {
   deployVillainBot1();
 
   deployVillainBot2();
-  player = new Player(100, 800, 30, "blue");
+  player = new Player(
+    canvas.width / 8,
+    canvas.height - canvas.height / 10,
+    30,
+    "blue"
+  );
   rotate = 90;
   baseLife = new BaseLife(50, 50, 400, 30, "grey");
   bullets1 = [];
@@ -1093,7 +1119,6 @@ const animate = () => {
     10,
     "blue"
   );
-  homeBase.update();
 
   playerLifeCount.update();
   if (looseBool || looseBoolPlayer) {
@@ -1122,6 +1147,7 @@ const animate = () => {
       bgMusic.volume = 0.5;
     }, 2000);
   }
+  homeBase.update();
 };
 animate();
 
@@ -1138,6 +1164,8 @@ document.addEventListener("keydown", (event) => {
   if (event.key == "S" || event.key == "s" || event.key == "ArrowDown") {
     player.dy = player.speed;
   }
+  bgMusic.play();
+  bgMusic.volume = 0.5;
   // if (event.code == "Space") {
   //   bullets.push(new Bullets(player.x, player.y, 5, "red"));
   // }
